@@ -1,3 +1,4 @@
+# Note: läs gärna artikeln om A-Star i kompendiet först :)
 import random
 
 class AsNode:
@@ -24,6 +25,7 @@ def print_nodes(nodes: list[AsNode]):
         print(f"{n.x}, {n.y}")
 
 
+# creates random 10x10 map with walls
 for i in range(0,10):
     for j in range(0,10):
         r = random.randint(0,9)
@@ -86,6 +88,7 @@ def print_path(nodes: list[AsNode]):
 
 print_map(as_nodes)
 
+# collecting start and goal coords
 start_x = int(input("Start X: "))
 start_y = int(input("Start Y: "))
 goal_x = int(input("Goal X: "))
@@ -93,8 +96,10 @@ goal_y = int(input("Goal Y: "))
 
 goal: AsNode = find_node(goal_x, goal_y, as_nodes)
 
+# setting node neighbours
 set_children(as_nodes)
 
+# initializing start node
 p: AsNode = find_node(start_x, start_y, as_nodes)
 p.g = 0
 p.h = manhattan_dist(p.x, p.y, goal_x, goal_y)
@@ -107,6 +112,7 @@ open_list.append(p)
 
 print_map(as_nodes)
 
+# START OF A-STAR ALGORITHM
 while open_list:
     b = best_node(open_list)
     print(f"looking at: {b.x}, {b.y}")
@@ -133,7 +139,9 @@ while open_list:
             c.f = c.g + c.h
             open_list.append(c)
             c.parent = b
+# END OF A-STAR ALGORITHM
 
+# Printing out the node path
 path_first = goal
 while True:
     if path_first is None:
