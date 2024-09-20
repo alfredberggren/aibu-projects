@@ -24,6 +24,14 @@ public class Unit {
         this.probability = probability;
     }
 
+    public boolean nEquals(String[] other){
+        for (int i = 0; i < other.length; i++) {
+            if (!other[i].equals(content[i]))
+                return false;
+        }
+        return true;
+    }
+
     @Override
     public String toString(){
         StringBuilder sb = new StringBuilder();
