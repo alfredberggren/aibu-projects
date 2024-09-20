@@ -7,27 +7,29 @@ public class NGram {
     private int n;
 
     HashMap<Unit, Integer> units;
-    public NGram(int n, String knowledgeBase){
+    public NGram(int n, ArrayList<String> knowledgeLines){
         this.n = n;
         units = new HashMap<>();
 
-        String[] words = knowledgeBase.split(" ");
-        int totalWords = words.length;
+        for (String line : knowledgeLines) {
+            String[] words = line.split(" ");
+            int totalWords = words.length;
 
+            for (int i = 0; i < totalWords - n - 1; i++){
+                Unit u = new Unit(n);
+                for (int j = 0; j < n; j++){
+                    u.addWord(words[i + j]);
+                }
 
-        for (int i = 0; i < totalWords - (n - 1); i++){
-           Unit u = new Unit(n);
-           for (int j = 0; j < n; j++){
-             u.addWord(words[i + j]);
-           }
-
-           if (!units.containsKey(u)) {
-               units.put(u, 1);
-           } else {
-               units.put(u, units.get(u)+1);
-           }
+                if (!units.containsKey(u)) {
+                  units.put(u, 1);
+                } else {
+                    units.put(u, units.get(u)+1);
+                }
+            }
 
         }
+        int totalWords = units.size();
 
         for (Map.Entry<Unit, Integer> pair : units.entrySet()){
             pair.getKey().setProbability((double) units.get(pair.getKey()) / (totalWords- (n-1)));
@@ -88,7 +90,7 @@ public class NGram {
           if (r <= total)
               return me.getKey();
       }
-      return "poop";
+      return "poop"; //todo: försök gå ner i n när inget hittas.
     }
 
     private Unit getRandomUnit(){

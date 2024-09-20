@@ -1,8 +1,46 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.ArrayList;
 public class Main {
     public static void main(String[] args){
-        NGram n = new NGram(3, "Hej Kristian kristian Kristian jag heter Kristian jag kommer från Bromma och har aldrig någonsin haft tre potatisar i min lilla påse som jag kommer från potatisar med fyra tre två eller två kanske Alfred är också en kompis som jag har som ibland har två potatisar i sin påse men det var ju en lögn han kommer från Tullinge, men originellt från Lund, där han föddes på Lunds Universitetssjukhus och jag gillar glass glass glass glass det är gott med glass det är gott morot vem är jag egentligen kaffe? vaddå Kaffe? Det är så jävla gott med Kult Nougat första ciggen på 10 dagar kaffe med lite mjölk och socker och linie aquavit i min lilla sko i min lilla jävla i min lilla skål i min lilla sko i min lilla påse i min lilla ciggen på 10 dagar sko");
+        int wordCount = Integer.parseInt(args[0]);
+        String[] prompt = Arrays.copyOfRange(args, 1, args.length);
+        int n = prompt.length + 1;
 
-        System.out.println(n.generateSentence(40, new String[]{"men", "det"}));
+        try {
+            FileWriter writer = new FileWriter("words.txt", true);
+            writer.write("\n");
+            for (int i = 0; i < prompt.length; i++) {
+                writer.write(prompt[i]);
+                writer.write(" ");
+            }
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        ArrayList<String> knowledgeLines = new ArrayList<>();
+        try {
+            FileReader reader = new FileReader("words.txt");
+            BufferedReader bufferedReader = new BufferedReader(reader);
+ 
+            String line;
+ 
+            while ((line = bufferedReader.readLine()) != null) {
+                knowledgeLines.add(line);
+            }
+            reader.close();
+ 
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        NGram ngram = new NGram(n, knowledgeLines);
+
+        System.out.println(ngram.generateSentence(wordCount, prompt));
 
     }
 }
