@@ -4,6 +4,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.ArrayList;
+
+// Todo: ignore case, punctuation, exclamation marks etc. (?)
+
 public class Main {
     public static void main(String[] args){
         int wordCount = Integer.parseInt(args[0]);

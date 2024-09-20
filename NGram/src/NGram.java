@@ -2,6 +2,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class NGram {
     private int n;
@@ -69,6 +70,8 @@ public class NGram {
     }
 
     private String getNextWord(String[] prompt) {
+      if (prompt.length == 0)
+          return getRandomWord();
       HashMap<String, Integer> subUnits = new HashMap<>();
       
       for (Map.Entry<Unit, Integer> me : units.entrySet()) {
@@ -90,7 +93,7 @@ public class NGram {
           if (r <= total)
               return me.getKey();
       }
-      return "poop"; //todo: försök gå ner i n när inget hittas.
+      return getNextWord(Arrays.copyOfRange(prompt, 1, prompt.length)); //försök gå ner i n när inget hittas.
     }
 
     private Unit getRandomUnit(){
@@ -104,5 +107,15 @@ public class NGram {
         return null;
     }
 
-    //TODO: skapa en riktig getNext"Random"Unit....
+    private String getRandomWord() {
+      int num = (int) (Math.random() * units.size());
+      for(Unit u: units.keySet()) 
+          if (--num < 0){
+              int num2 = (int) (Math.random() * u.getContent().length);
+              for (String s : u.getContent())
+                  if (--num2 < 0)
+                      return s;
+          }
+    return "gog";
+    }
 }
