@@ -18,7 +18,7 @@ public class NGram {
             String[] words = line.split(" ");
             int totalWords = words.length;
 
-            for (int i = 0; i < totalWords - n - 1; i++){
+            for (int i = 0; i <= totalWords - n; i++){
                 Unit u = new Unit(n);
                 for (int j = 0; j < n; j++){
                     u.addWord(words[i + j]);
@@ -54,7 +54,7 @@ public class NGram {
             String[] words = line.split(" ");
             int totalWords = words.length;
 
-            for (int i = 0; i < totalWords - n - 1; i++){
+            for (int i = 0; i <= totalWords - n; i++){
                 Unit u = new Unit(n);
                 for (int j = 0; j < n; j++){
                     u.addWord(words[i + j]);
@@ -71,37 +71,54 @@ public class NGram {
     }
 
     public String generateSentence(int words, String[] initialPrompt){
-        StringBuilder sb = new StringBuilder();
         ArrayList<String> finalSentence = new ArrayList<String>();
         for (int i = 0; i < initialPrompt.length; i++) {
             finalSentence.add(initialPrompt[i]);
         }
         for (int i = 0; i <= words; i++){
+            reconstruct(finalSentence.size() + 1);
             String[] prompt = new String[n - 1];
             int k = 0;
             for (int j = n - 2; j >= 0; j--, k++) {
                 prompt[k] = finalSentence.get(finalSentence.size() - 1 - j);
             } 
+            System.out.println("PROMPT");
+            for (int a = 0; a < prompt.length; a++) {
+                System.out.print(prompt[a]);
+                System.out.print(" ");
+            }
+            System.out.println();
 
             String nextWord = getNextWord(prompt);
             finalSentence.add(nextWord);
-
-            sb.append(nextWord);
+        }
+        StringBuilder sb = new StringBuilder();
+        for (String s : finalSentence) {
+            sb.append(s);
             sb.append(" ");
-
         }
         return sb.toString();
     }
 
     private String getNextWord(String[] prompt) {
+      System.out.println("gnw "+n);
+      for (Unit u : units) {
+          System.out.println(u.getContent()[0]);
+      }
+      for (int i = 0; i < prompt.length; i++) {
+          System.out.print(prompt[i]);
+          System.out.print(" ");
+      }
+    System.out.println();
       if (prompt.length == 0)
           return getRandomWord();
       HashMap<String, Integer> subUnits = new HashMap<>();
       
       for (Map.Entry<Unit, Integer> me : units.entrySet()) {
-          if (me.getKey().nEquals(prompt))
+          if (me.getKey().nEquals(prompt)){
+              System.out.println("nEquals");
               subUnits.put(me.getKey().getContent()[me.getKey().getContent().length - 1], me.getValue());
-              
+          }
       }
       
       int subTotal = 0;
@@ -119,17 +136,6 @@ public class NGram {
       }
       reconstruct(n - 1);
       return getNextWord(Arrays.copyOfRange(prompt, 1, prompt.length)); //försök gå ner i n när inget hittas.
-    }
-
-    private Unit getRandomUnit(){
-        double r = Math.random();
-        double total = 0.0;
-        for (Map.Entry<Unit, Integer> pair : units.entrySet()){
-            total += pair.getKey().getProbability();
-            if (r <= total)
-                return pair.getKey();
-        }
-        return null;
     }
 
     private String getRandomWord() {
