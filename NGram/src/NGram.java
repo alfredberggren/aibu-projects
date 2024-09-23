@@ -6,9 +6,47 @@ import java.util.Arrays;
 
 public class NGram {
     private int n;
+    private ArrayList<String> knowledgeLines;
 
     HashMap<Unit, Integer> units;
     public NGram(int n, ArrayList<String> knowledgeLines){
+        this.n = n;
+        units = new HashMap<>();
+        this.knowledgeLines = knowledgeLines;
+
+        for (String line : knowledgeLines) {
+            String[] words = line.split(" ");
+            int totalWords = words.length;
+
+            for (int i = 0; i < totalWords - n - 1; i++){
+                Unit u = new Unit(n);
+                for (int j = 0; j < n; j++){
+                    u.addWord(words[i + j]);
+                }
+
+                if (!units.containsKey(u)) {
+                  units.put(u, 1);
+                } else {
+                    units.put(u, units.get(u)+1);
+                }
+            }
+
+        }
+        // int totalWords = units.size();
+
+        // for (Map.Entry<Unit, Integer> pair : units.entrySet()){
+        //     pair.getKey().setProbability((double) units.get(pair.getKey()) / (totalWords- (n-1)));
+        //     System.out.println(pair.getKey() + ": " + units.get(pair.getKey()) + ", " + pair.getKey().getProbability());
+        // }
+        //
+        // double total = 0.0;
+        // for (Map.Entry<Unit, Integer> pair : units.entrySet()){
+        //     total += pair.getKey().getProbability();
+        // }
+        // System.out.println("total: " + total);
+    }
+
+    public void reconstruct(int n) {
         this.n = n;
         units = new HashMap<>();
 
@@ -30,20 +68,7 @@ public class NGram {
             }
 
         }
-        int totalWords = units.size();
-
-        for (Map.Entry<Unit, Integer> pair : units.entrySet()){
-            pair.getKey().setProbability((double) units.get(pair.getKey()) / (totalWords- (n-1)));
-            System.out.println(pair.getKey() + ": " + units.get(pair.getKey()) + ", " + pair.getKey().getProbability());
-        }
-
-        double total = 0.0;
-        for (Map.Entry<Unit, Integer> pair : units.entrySet()){
-            total += pair.getKey().getProbability();
-        }
-        System.out.println("total: " + total);
     }
-
 
     public String generateSentence(int words, String[] initialPrompt){
         StringBuilder sb = new StringBuilder();
@@ -51,7 +76,6 @@ public class NGram {
         for (int i = 0; i < initialPrompt.length; i++) {
             finalSentence.add(initialPrompt[i]);
         }
-        System.out.println(finalSentence);
         for (int i = 0; i <= words; i++){
             String[] prompt = new String[n - 1];
             int k = 0;
@@ -93,6 +117,7 @@ public class NGram {
           if (r <= total)
               return me.getKey();
       }
+      reconstruct(n - 1);
       return getNextWord(Arrays.copyOfRange(prompt, 1, prompt.length)); //försök gå ner i n när inget hittas.
     }
 
