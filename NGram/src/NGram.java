@@ -76,7 +76,7 @@ public class NGram {
             finalSentence.add(initialPrompt[i]);
         }
         for (int i = 0; i <= words; i++){
-            reconstruct(finalSentence.size() + 1);
+            reconstruct(initialPrompt.length + 1);
             String[] prompt = new String[n - 1];
             int k = 0;
             for (int j = n - 2; j >= 0; j--, k++) {
@@ -102,21 +102,26 @@ public class NGram {
 
     private String getNextWord(String[] prompt) {
       System.out.println("gnw "+n);
-      for (Unit u : units) {
-          System.out.println(u.getContent()[0]);
-      }
-      for (int i = 0; i < prompt.length; i++) {
-          System.out.print(prompt[i]);
-          System.out.print(" ");
-      }
-    System.out.println();
+      // for (Unit u : units.keySet()) {
+      //     for (int i = 0; i < u.getContent().length; i++) {
+      //      System.out.print(u.getContent()[i]);
+      //       System.out.print(" ");
+      //     }
+      //   System.out.println();
+      // }
+      // System.out.println();
+      // for (int i = 0; i < prompt.length; i++) {
+      //     System.out.print(prompt[i]);
+      //     System.out.print(" ");
+      // }
+
       if (prompt.length == 0)
           return getRandomWord();
       HashMap<String, Integer> subUnits = new HashMap<>();
       
       for (Map.Entry<Unit, Integer> me : units.entrySet()) {
           if (me.getKey().nEquals(prompt)){
-              System.out.println("nEquals");
+              // System.out.println("nEquals");
               subUnits.put(me.getKey().getContent()[me.getKey().getContent().length - 1], me.getValue());
           }
       }
@@ -134,7 +139,7 @@ public class NGram {
           if (r <= total)
               return me.getKey();
       }
-      reconstruct(n - 1);
+      reconstruct(n-1);
       return getNextWord(Arrays.copyOfRange(prompt, 1, prompt.length)); //försök gå ner i n när inget hittas.
     }
 

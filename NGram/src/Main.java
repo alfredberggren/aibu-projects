@@ -12,6 +12,7 @@ public class Main {
     public static void main(String[] args){
         int wordCount = Integer.parseInt(args[0]);
         Scanner in = new Scanner(System.in);
+        int num = Integer.parseInt(args[1]);
         //String[] prompt = Arrays.copyOfRange(args, 1, args.length);
         //int n = prompt.length + 1;
 
@@ -39,8 +40,7 @@ public class Main {
             System.out.println("Say>");
             String l = in.nextLine();
             String[] prompt = l.split(" ");
-            int n = prompt.length + 1;
-            NGram ngram = new NGram(n, knowledgeLines);
+            NGram ngram = new NGram(num, knowledgeLines);
             writer.write(l + '\n');
             while (true) {
                 System.out.println(ngram.generateSentence(wordCount, prompt));
@@ -49,7 +49,7 @@ public class Main {
                 if (p.equals("q"))
                     break;
                 prompt = p.split(" ");
-                ngram.reconstruct(prompt.length + 1);
+                ngram.reconstruct(num);
                 writer.write(p + "\n");
             }
            
