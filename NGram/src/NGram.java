@@ -6,11 +6,13 @@ import java.util.Arrays;
 
 public class NGram {
     private int n;
+    private int nSation;
     private ArrayList<String> knowledgeLines;
 
     HashMap<Unit, Integer> units;
     public NGram(int n, ArrayList<String> knowledgeLines){
         this.n = n;
+        this.nSation = n;
         units = new HashMap<>();
         this.knowledgeLines = knowledgeLines;
 
@@ -76,7 +78,7 @@ public class NGram {
             finalSentence.add(initialPrompt[i]);
         }
         for (int i = 0; i <= words; i++){
-            reconstruct(initialPrompt.length + 1);
+            reconstruct(nSation);
             String[] prompt = new String[n - 1];
             int k = 0;
             for (int j = n - 2; j >= 0; j--, k++) {
